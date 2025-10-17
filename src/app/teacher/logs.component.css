@@ -1,0 +1,16 @@
+.page-header {
+  margin-bottom: 12px;
+}
+.logs {
+  width: 100%;
+  border-collapse: collapse;
+}
+.logs th,
+.logs td {
+  padding: 8px 6px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+.muted {
+  color: #666;
+}

@@ -1,0 +1,24 @@
+<mat-sidenav-container autosize class="full-height">
+  <mat-sidenav mode="side" opened>
+    <div class="sidenav-header">Teacher</div>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/teacher/dashboard" routerLinkActive="active">Dashboard</a>
+      <a mat-list-item routerLink="/teacher/students" routerLinkActive="active">Students</a>
+      <a mat-list-item routerLink="/teacher/attendance" routerLinkActive="active">Attendance</a>
+      <a mat-list-item routerLink="/teacher/logs" routerLinkActive="active">Login Logs</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <span class="brand-title">
+        <mat-icon>school</mat-icon>
+        Teacher Portal
+      </span>
+      <span class="spacer"></span>
+      <button mat-button (click)="logout()">Logout</button>
+    </mat-toolbar>
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

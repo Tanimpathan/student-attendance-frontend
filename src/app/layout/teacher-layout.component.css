@@ -1,0 +1,18 @@
+.full-height {
+  height: 100vh;
+}
+.sidenav-header {
+  padding: 16px;
+  font-weight: 700;
+}
+.brand-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.container {
+  padding: 16px;
+}
+.spacer {
+  flex: 1 1 auto;
+}

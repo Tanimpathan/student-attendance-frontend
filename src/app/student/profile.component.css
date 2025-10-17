@@ -1,0 +1,11 @@
+.page-header {
+  margin-bottom: 12px;
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.actions {
+  margin-top: 12px;
+}
