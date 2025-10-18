@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { AddStudentDialogComponent } from './add-student-dialog.component';
 import { UploadCsvDialogComponent } from './upload-csv-dialog.component';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-teacher-students',
@@ -41,7 +42,7 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
     'first_name',
     'email',
     'mobile',
-    // 'active',
+    'is_active',
     'actions',
   ];
   dataSource = new MatTableDataSource<Student>([]);
@@ -124,13 +125,9 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
         this.currentPage = response.pagination.currentPage - 1; // API is 1-based, Paginator is 0-based
         this.pageSize = response.pagination.perPage;
 
-        // Update paginator and sort after receiving data
         if (this.paginator) {
           this.paginator.pageIndex = this.currentPage;
           this.paginator.pageSize = this.pageSize;
-        }
-        if (this.sort) {
-          // this.sort.direction and this.sort.active are already set by query params
         }
       },
       error: (err) => {
@@ -161,8 +158,6 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
     this.currentPage = 0;
     this.updateQueryParams();
   }
-
-  // Removed addMock, edit, deactivate for now. Will be replaced with API calls and dialogs.
 
   download() {
     this.teacherService.downloadStudentsCsv().subscribe({
@@ -232,7 +227,29 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
   }
 
   deactivateStudent(student: Student) {
-    this.snackBar.open('Deactivate student API call placeholder', 'Close', { duration: 3000 });
+    if (student.student_id) {
+      const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+        width: '300px',
+        data: { message: `Are you sure you want to deactivate ${student.username}?` }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.teacherService.deactivateStudentApi(student.student_id!).subscribe({
+            next: () => {
+              this.snackBar.open(`${student.username} deactivated successfully`, 'Close', { duration: 3000 });
+              this.loadStudents();
+            },
+            error: (err) => {
+              console.error('Error deactivating student', err);
+              this.snackBar.open(`Failed to deactivate ${student.username}`, 'Close', { duration: 3000 });
+            },
+          });
+        }
+      });
+    } else {
+      this.snackBar.open('Student ID not found for deactivation', 'Close', { duration: 3000 });
+    }
   }
 
   downloadSampleCsv() {

@@ -8,6 +8,8 @@ export interface TeacherDashboardData {
 
 export interface Student {
   id?: number;
+  user_id?: number;
+  student_id?: number;
   username: string;
   email: string;
   password?: string;
@@ -16,7 +18,7 @@ export interface Student {
   last_name?: string;
   date_of_birth?: string;
   address?: string;
-  // Add other relevant student data fields here
+  is_active?: boolean;
 }
 
 export interface StudentPaginationResponse {

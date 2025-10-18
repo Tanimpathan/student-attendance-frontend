@@ -48,4 +48,8 @@ export class TeacherService {
   addStudent(studentData: Student): Observable<Student> {
     return this.http.post<Student>(`${this.apiUrl}/teachers/students`, studentData);
   }
+
+  deactivateStudentApi(studentId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/teachers/students/${studentId}/deactivate`, {});
+  }
 }
