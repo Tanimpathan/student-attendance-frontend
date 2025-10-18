@@ -1,6 +1,20 @@
 .page-header {
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
-.muted {
-  color: #666;
+
+mat-card {
+  margin-top: 20px;
+  padding: 20px;
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+}
+
+.mat-mdc-paginator {
+  margin-top: 16px;
 }

@@ -1,16 +1,24 @@
 .page-header {
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
-.logs {
+
+mat-card {
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.full-width-table {
   width: 100%;
-  border-collapse: collapse;
 }
-.logs th,
-.logs td {
-  padding: 8px 6px;
-  border-bottom: 1px solid #eee;
-  text-align: left;
+
+.mat-column-login_time {
+  flex: 0 0 180px;
 }
-.muted {
-  color: #666;
+
+.mat-column-ip_address {
+  flex: 0 0 150px;
+}
+
+.mat-column-status {
+  flex: 0 0 100px;
 }

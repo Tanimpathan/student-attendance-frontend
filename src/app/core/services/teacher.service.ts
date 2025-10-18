@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { TeacherDashboardData, Student, StudentPaginationResponse } from '../interfaces/teacher.interface';
+import { TeacherDashboardData, Student, StudentPaginationResponse, AttendancePaginationResponse, TeacherLoginActivityResponse } from '../interfaces/teacher.interface';
 import { HttpParams } from '@angular/common/http';
 
 @Injectable({
@@ -27,12 +27,13 @@ export class TeacherService {
     return this.http.get(`${this.apiUrl}/teachers/students/download`, { responseType: 'blob' });
   }
 
-  getStudents(page: number, limit: number, filterValue?: string, sortBy?: string, sortOrder?: string): Observable<StudentPaginationResponse> {
+  getStudents(page: number, limit: number, filterValue?: string, filterBy?: string, sortBy?: string, sortOrder?: string): Observable<StudentPaginationResponse> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
 
-    if (filterValue) {
+    if (filterValue && filterBy) {
+      params = params.set('filterBy', filterBy);
       params = params.set('filterValue', filterValue);
     }
     if (sortBy) {
@@ -55,5 +56,23 @@ export class TeacherService {
 
   updateStudent(studentId: number, studentData: Student): Observable<Student> {
     return this.http.put<Student>(`${this.apiUrl}/teachers/students/${studentId}`, studentData);
+  }
+
+  getAttendance(page: number, limit: number, sortBy?: string, sortOrder?: string): Observable<AttendancePaginationResponse> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    if (sortBy) {
+      params = params.set('sortBy', sortBy);
+    }
+    if (sortOrder) {
+      params = params.set('sortOrder', sortOrder);
+    }
+    return this.http.get<AttendancePaginationResponse>(`${this.apiUrl}/teachers/attendance`, { params });
+  }
+
+  getTeacherLoginActivity(): Observable<TeacherLoginActivityResponse> {
+    return this.http.get<TeacherLoginActivityResponse>(`${this.apiUrl}/teachers/login-activity`);
   }
 }

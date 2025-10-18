@@ -108,6 +108,7 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
       page: this.currentPage + 1,
       limit: this.pageSize,
       filterValue: this.filterValue,
+      filterBy: 'username', // Always filter by username for the search input
       sortBy: this.sortBy,
       sortOrder: this.sortOrder
     });
@@ -115,6 +116,7 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
       this.currentPage + 1,
       this.pageSize,
       this.filterValue,
+      'username', // Pass 'username' as filterBy
       this.sortBy,
       this.sortOrder || undefined
     ).subscribe({
@@ -142,6 +144,7 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
       page: this.currentPage,
       limit: this.pageSize,
       filterValue: this.filterValue || undefined,
+      filterBy: this.filterValue ? 'username' : undefined, // Only send filterBy if filterValue exists
       sortBy: this.sort.active || undefined,
       sortOrder: this.sort.direction || undefined,
     };

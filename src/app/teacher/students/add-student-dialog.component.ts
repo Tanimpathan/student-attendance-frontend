@@ -53,7 +53,7 @@ export class AddStudentDialogComponent {
       mobile: new FormControl(this.data?.mobile || '', Validators.pattern(/^\d{10,15}$/)),
       first_name: new FormControl(this.data?.first_name || ''),
       last_name: new FormControl(this.data?.last_name || ''),
-      date_of_birth: new FormControl(formatDateForInput(this.data?.date_of_birth) || '', Validators.required),
+      date_of_birth: new FormControl(formatDateForInput(this.data?.date_of_birth) || ''),
       address: new FormControl(this.data?.address || ''),
     });
   }
