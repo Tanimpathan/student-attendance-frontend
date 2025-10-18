@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { StudentLoginActivity } from '../interfaces/student.interface';
+import { LoginActivityResponse, StudentLoginActivity } from '../interfaces/student.interface';
 
 export interface StudentProfile {
   first_name: string;
@@ -36,9 +36,9 @@ export class StudentService {
   /**
    * Get login activity logs for a student
    */
-  getLoginActivity(studentId: number): Observable<StudentLoginActivity[]> {
+  getLoginActivity(studentId: number): Observable<LoginActivityResponse> {
     const token = localStorage.getItem('token');
-    return this.http.get<StudentLoginActivity[]>(`${environment.apiUrl}/student/login-activity/${studentId}`, {
+    return this.http.get<LoginActivityResponse>(`${environment.apiUrl}/student/login-activity/${studentId}`, {
       headers: new HttpHeaders({
         Authorization: `Bearer ${token}`
       })

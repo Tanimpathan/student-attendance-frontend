@@ -14,6 +14,7 @@ import { StudentLoginActivity } from '../../core/interfaces/student.interface';
 })
 export class StudentLogsComponent implements OnInit {
   myLogs: StudentLoginActivity[] = [];
+  period: string = "";
 
   constructor(private studentService: StudentService) {}
 
@@ -21,7 +22,10 @@ export class StudentLogsComponent implements OnInit {
     const user = JSON.parse(localStorage.getItem('user') || 'null');
     if (user?.student_id) {
       this.studentService.getLoginActivity(user.student_id).subscribe({
-        next: (logs) => this.myLogs = logs,
+        next: (logs) => {
+          this.myLogs = logs.login_activity;          
+          this.period = logs.period
+        },
         error: () => this.myLogs = []
       });
     }
