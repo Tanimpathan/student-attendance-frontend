@@ -1,0 +1,137 @@
+/* Dialog container */
+::ng-deep .mat-mdc-dialog-container .mat-mdc-dialog-surface {
+    width: 800px !important;
+    max-width: 95vw !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+  }
+  
+  /* Dialog title */
+  .dialog-title {
+    padding: 24px 24px 16px !important;
+    margin: 0 !important;
+    font-size: 24px !important;
+    font-weight: 600 !important;
+    color: #1f2937;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
+  }
+  
+  /* Dialog content */
+  .dialog-content {
+    padding: 0 24px !important;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  
+  /* Form styling */
+  .student-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 16px 0;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  
+  .form-field {
+    width: 100%;
+  }
+  
+  .full-width {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+  
+  /* Form field enhancements */
+  ::ng-deep .mat-form-field-outline {
+    border-radius: 8px !important;
+  }
+  
+  ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    color: #d1d5db;
+  }
+  
+  ::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: #4f46e5 !important;
+  }
+  
+  ::ng-deep .mat-form-field-label {
+    color: #6b7280 !important;
+  }
+  
+  ::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
+    color: #4f46e5 !important;
+  }
+  
+  /* Dialog actions */
+  .dialog-actions {
+    padding: 16px 24px 24px !important;
+    margin: 0 !important;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+  }
+  
+  .cancel-btn {
+    color: #6b7280 !important;
+    border: 1px solid #d1d5db !important;
+  }
+  
+  .submit-btn {
+    min-width: 120px;
+    font-weight: 500;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    ::ng-deep .mat-mdc-dialog-container .mat-mdc-dialog-surface {
+      width: 95vw !important;
+      max-width: 95vw !important;
+    }
+    
+    .form-row {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    
+    .dialog-content {
+      padding: 0 16px !important;
+    }
+    
+    .dialog-actions {
+      padding: 16px 16px 20px !important;
+      flex-direction: column-reverse;
+    }
+    
+    .cancel-btn, .submit-btn {
+      width: 100%;
+      margin: 0 !important;
+    }
+  }
+  
+  /* Scrollbar styling for dialog content */
+  .dialog-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .dialog-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  .dialog-content::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+  
+  .dialog-content::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }

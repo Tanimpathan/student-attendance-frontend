@@ -21,7 +21,10 @@ export interface Student {
 
 export interface StudentPaginationResponse {
   students: Student[];
-  total_count: number;
-  page: number;
-  limit: number;
+  pagination: {
+    totalStudents: number;
+    currentPage: number;
+    perPage: number;
+    totalPages: number;
+  };
 }

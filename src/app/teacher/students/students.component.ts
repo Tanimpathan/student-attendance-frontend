@@ -14,6 +14,8 @@ import { Student, StudentPaginationResponse } from '../../core/interfaces/teache
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
+import { AddStudentDialogComponent } from './add-student-dialog.component';
+import { UploadCsvDialogComponent } from './upload-csv-dialog.component';
 
 @Component({
   selector: 'app-teacher-students',
@@ -75,19 +77,24 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    // Defer initialization to ensure @ViewChild elements are ready
+    setTimeout(() => {
+      this.paginator.pageIndex = this.currentPage;
+      this.paginator.pageSize = this.pageSize;
+      this.sort.direction = this.sortOrder;
+      this.sort.active = this.sortBy;
+    });
+
     this.sort.sortChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.currentPage = 0;
       this.updateQueryParams();
     });
 
-    this.paginator.page.pipe(takeUntil(this.destroy$)).subscribe(() => {
+    this.paginator.page.pipe(takeUntil(this.destroy$)).subscribe(event => {
+      this.currentPage = event.pageIndex;
+      this.pageSize = event.pageSize;
       this.updateQueryParams();
     });
-
-    // Initial load when paginator and sort are ready
-    // if (this.dataSource.data.length === 0) {
-    //   this.loadStudents();
-    // }
   }
 
   ngOnDestroy() {
@@ -96,16 +103,35 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
   }
 
   loadStudents() {
+    console.log('Loading students with params:', {
+      page: this.currentPage + 1,
+      limit: this.pageSize,
+      filterValue: this.filterValue,
+      sortBy: this.sortBy,
+      sortOrder: this.sortOrder
+    });
     this.teacherService.getStudents(
-      this.currentPage + 1, // API is 1-based, Paginator is 0-based
+      this.currentPage + 1,
       this.pageSize,
       this.filterValue,
       this.sortBy,
       this.sortOrder || undefined
     ).subscribe({
       next: (response) => {
+        console.log('API Response:', response);
         this.dataSource.data = response.students;
-        this.totalStudents = response.total_count;
+        this.totalStudents = response.pagination.totalStudents;
+        this.currentPage = response.pagination.currentPage - 1; // API is 1-based, Paginator is 0-based
+        this.pageSize = response.pagination.perPage;
+
+        // Update paginator and sort after receiving data
+        if (this.paginator) {
+          this.paginator.pageIndex = this.currentPage;
+          this.paginator.pageSize = this.pageSize;
+        }
+        if (this.sort) {
+          // this.sort.direction and this.sort.active are already set by query params
+        }
       },
       error: (err) => {
         console.error('Error fetching students', err);
@@ -115,15 +141,17 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
   }
 
   updateQueryParams() {
+    const queryParams = {
+      page: this.currentPage,
+      limit: this.pageSize,
+      filterValue: this.filterValue || undefined,
+      sortBy: this.sort.active || undefined,
+      sortOrder: this.sort.direction || undefined,
+    };
+    console.log('Updating query params:', queryParams);
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
-      queryParams: {
-        page: this.currentPage,
-        limit: this.pageSize,
-        filterValue: this.filterValue || undefined,
-        sortBy: this.sort.active || undefined,
-        sortOrder: this.sort.direction || undefined,
-      },
+      queryParams: queryParams,
       queryParamsHandling: 'merge',
     });
   }
@@ -155,29 +183,48 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
     });
   }
 
-  onUpload(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) return;
-    const file = input.files[0];
-
-    this.teacherService.uploadStudentsCsv(file).subscribe({
-      next: () => {
-        this.snackBar.open('Students uploaded successfully', 'Close', { duration: 3000 });
-        this.loadStudents(); // Reload students after upload
-      },
-      error: (err) => {
-        console.error('Error uploading students CSV', err);
-        this.snackBar.open('Failed to upload students CSV', 'Close', { duration: 3000 });
-      },
+  onUpload() {
+    const dialogRef = this.dialog.open(UploadCsvDialogComponent, {
+      width: '400px',
     });
-    (input as any).value = ''; // Clear the file input
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) { // result will be the selected File object if not cancelled
+        const file: File = result;
+        this.teacherService.uploadStudentsCsv(file).subscribe({
+          next: () => {
+            this.snackBar.open('Students uploaded successfully', 'Close', { duration: 3000 });
+            this.loadStudents(); // Reload students after upload
+          },
+          error: (err) => {
+            console.error('Error uploading students CSV', err);
+            this.snackBar.open('Failed to upload students CSV', 'Close', { duration: 3000 });
+          },
+        });
+      }
+    });
   }
 
   openAddStudentDialog() {
-    // Implement MatDialog to open a form for adding a student
-    // This will be a separate component that takes student data
-    // After dialog close, if data is returned, call addStudent and reload table
-    this.snackBar.open('Add student dialog placeholder', 'Close', { duration: 3000 });
+    const dialogRef = this.dialog.open(AddStudentDialogComponent, {
+      width: '600px',
+      data: null,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.teacherService.addStudent(result).subscribe({
+          next: () => {
+            this.snackBar.open('Student added successfully', 'Close', { duration: 3000 });
+            this.loadStudents();
+          },
+          error: (err) => {
+            console.error('Error adding student', err);
+            this.snackBar.open('Failed to add student', 'Close', { duration: 3000 });
+          },
+        });
+      }
+    });
   }
 
   editStudent(student: Student) {
@@ -186,5 +233,17 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
 
   deactivateStudent(student: Student) {
     this.snackBar.open('Deactivate student API call placeholder', 'Close', { duration: 3000 });
+  }
+
+  downloadSampleCsv() {
+    const csvContent = `username,email,password,mobile,first_name,last_name,address\nmaria,maria@school.com,test1234!,01234567899,maria,lopez,dhaka`;
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sample_students.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    this.snackBar.open('Sample CSV downloaded successfully', 'Close', { duration: 3000 });
   }
 }

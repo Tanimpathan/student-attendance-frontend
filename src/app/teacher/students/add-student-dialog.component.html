@@ -1,0 +1,78 @@
+<h2 mat-dialog-title class="dialog-title">{{ data ? 'Edit Student' : 'Add New Student' }}</h2>
+
+<div mat-dialog-content class="dialog-content">
+  <form [formGroup]="studentForm" (ngSubmit)="onSubmit()" class="student-form">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" required>
+        <mat-error *ngIf="studentForm.get('username')?.hasError('required')">
+          Username is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" required>
+        <mat-error *ngIf="studentForm.get('email')?.hasError('required')">
+          Email is required
+        </mat-error>
+        <mat-error *ngIf="studentForm.get('email')?.hasError('email')">
+          Invalid email format
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field" *ngIf="!data">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" required>
+        <mat-error *ngIf="studentForm.get('password')?.hasError('required')">
+          Password is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Mobile</mat-label>
+        <input matInput formControlName="mobile">
+        <mat-error *ngIf="studentForm.get('mobile')?.hasError('pattern')">
+          Please enter a valid mobile number
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="first_name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="last_name">
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Date of Birth</mat-label>
+        <input matInput formControlName="date_of_birth" type="date">
+      </mat-form-field>
+      
+      <!-- Empty field to maintain grid alignment -->
+      <div class="form-field"></div>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Address</mat-label>
+      <textarea matInput formControlName="address" rows="3"></textarea>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions class="dialog-actions">
+  <button mat-button (click)="onNoClick()" class="cancel-btn">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="studentForm.invalid" (click)="onSubmit()" class="submit-btn">
+    {{ data ? 'Update' : 'Create' }} Student
+  </button>
+</div>
