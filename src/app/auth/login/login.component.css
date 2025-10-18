@@ -20,6 +20,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  width: 100vw; /* Add this to ensure full width */
 }
 
 .auth-container {
@@ -27,6 +28,8 @@
   max-width: 440px;
   animation: slideUp 0.6s ease-out;
   box-sizing: border-box;
+  max-height: 100vh; /* Limit container height */
+  overflow-y: auto; /* Allow scrolling inside container if needed */
 }
 
 @keyframes slideUp {
@@ -47,6 +50,7 @@
   overflow: hidden;
   backdrop-filter: blur(10px);
   box-sizing: border-box;
+  max-height: 95vh; /* Ensure card doesn't exceed viewport */
 }
 
 .card-header {
@@ -54,6 +58,10 @@
   background: linear-gradient(135deg, #f8faff 0%, #f0f4ff 100%);
   border-bottom: 1px solid #eef2ff;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
 }
 
 .text-center {
@@ -66,6 +74,13 @@
   color: #1f2937;
   margin-bottom: 8px !important;
   letter-spacing: -0.5px;
+}
+
+.welcome-subtitle {
+  font-size: 16px;
+  color: #6b7280 !important;
+  font-weight: 400;
+  margin-bottom: 0 !important;
 }
 
 .auth-form {
@@ -126,7 +141,7 @@
   text-decoration: none;
 }
 
-/* Responsive */
+/* Responsive for smaller screens */
 @media (max-width: 480px) {
   .auth-bg {
     padding: 16px;
@@ -142,5 +157,21 @@
   
   .welcome-title {
     font-size: 24px;
+  }
+}
+
+/* For very small screens where content might not fit */
+@media (max-height: 700px) {
+  .auth-container {
+    max-height: 95vh;
+    overflow-y: auto; /* Enable scrolling on short screens */
+  }
+  
+  .auth-card {
+    max-height: none; /* Remove max-height restriction */
+  }
+  
+  .auth-form {
+    padding: 30px 40px; /* Slightly reduced padding */
   }
 }

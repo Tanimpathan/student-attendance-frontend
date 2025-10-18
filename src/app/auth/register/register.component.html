@@ -1,50 +1,67 @@
 <div class="auth-bg">
-  <mat-card class="auth-card">
-    <mat-card-header>
-      <mat-card-title>Create Account</mat-card-title>
-      <mat-card-subtitle>Sign up to get started</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="off">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Username</mat-label>
-          <input matInput formControlName="username" required />
-          <mat-error *ngIf="username?.invalid && (username?.dirty || username?.touched)">
-            {{ getErrorMessage('username') }}
-          </mat-error>
-        </mat-form-field>
+  <div class="auth-container">
+    <mat-card class="auth-card">
+      <div class="card-header">
+        <mat-card-header class="text-center">
+          <mat-card-title class="welcome-title">Create Account</mat-card-title>
+        </mat-card-header>
+      </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" required />
-          <mat-error *ngIf="email?.invalid && (email?.dirty || email?.touched)">
-            {{ getErrorMessage('email') }}
-          </mat-error>
-        </mat-form-field>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="off" class="auth-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" required />
+            <mat-error *ngIf="form.get('username')?.hasError('required')">
+              Username is required
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Mobile</mat-label>
-          <input matInput formControlName="mobile" required />
-          <mat-error *ngIf="mobile?.invalid && (mobile?.dirty || mobile?.touched)">
-            {{ getErrorMessage('mobile') }}
-          </mat-error>
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" required />
+            <mat-error *ngIf="form.get('email')?.hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="form.get('email')?.hasError('email')">
+              Please enter a valid email
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" required />
-          <mat-error *ngIf="password?.invalid && (password?.dirty || password?.touched)">
-            {{ getErrorMessage('password') }}
-          </mat-error>
-        </mat-form-field>
-        
-        <div class="register-actions">
-          <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
-            Register
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mobile</mat-label>
+            <input matInput formControlName="mobile" required />
+            <mat-error *ngIf="form.get('mobile')?.hasError('required')">
+              Mobile number is required
+            </mat-error>
+            <mat-error *ngIf="form.get('mobile')?.hasError('pattern')">
+              Please enter a valid mobile number
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" required />
+            <mat-error *ngIf="form.get('password')?.hasError('required')">
+              Password is required
+            </mat-error>
+            <mat-error *ngIf="form.get('password')?.hasError('minlength')">
+              Password must be at least 6 characters
+            </mat-error>
+          </mat-form-field>
+          
+          <button mat-flat-button color="primary" type="submit" class="submit-button" [disabled]="form.invalid">
+            Create Account
           </button>
-          <a mat-button routerLink="/auth/login">Already have an account?</a>
-        </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
+
+          <div class="auth-footer">
+            <span class="footer-text">Already have an account?</span>
+            <a mat-button color="primary" routerLink="/auth/login" class="signup-link">
+              Sign In
+            </a>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>

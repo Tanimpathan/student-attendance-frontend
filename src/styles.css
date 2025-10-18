@@ -1,6 +1,5 @@
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 @import '../node_modules/ngx-toastr/toastr.css';
-/* Material theme setup */
 :root {
   --brand-primary: #4f46e5;
   --brand-accent: #22c55e;
@@ -8,18 +7,21 @@
   color-scheme: light;
 }
 
-/* Base layout helpers */
 html,
 body {
   height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 body {
-  margin: 0;
   font-family: Roboto, 'Segoe UI', Arial, sans-serif;
   background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
   color: #111827;
 }
+
+/*
 .auth-bg {
   min-height: 100vh;
   display: grid;
@@ -31,6 +33,7 @@ body {
     ),
     linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
 }
+*/
 
 .mat-mdc-card {
   border-radius: 14px;
@@ -131,12 +134,9 @@ body {
   flex: 1 1 auto;
 }
 
-/* Utility classes */
 .muted {
   color: #6b7280;
 }
 .clickable {
   cursor: pointer;
 }
-
-/* You can add global styles to this file, and also import other style files */
