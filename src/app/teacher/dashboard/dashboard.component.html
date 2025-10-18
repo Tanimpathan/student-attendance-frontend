@@ -4,14 +4,14 @@
 <div class="stat-grid">
   <mat-card class="stat-card stat-primary">
     <mat-card-title><span class="material-icons">groups</span> Total Students</mat-card-title>
-    <mat-card-content class="stat-value">{{ totalStudents }}</mat-card-content>
+    <mat-card-content class="stat-value">{{ dashboardData.totalStudents }}</mat-card-content>
   </mat-card>
   <mat-card class="stat-card stat-accent">
     <mat-card-title><span class="material-icons">check_circle</span> Present Today</mat-card-title>
-    <mat-card-content class="stat-value">{{ presentToday }}</mat-card-content>
+    <mat-card-content class="stat-value">{{ dashboardData.presentToday }}</mat-card-content>
   </mat-card>
   <mat-card class="stat-card stat-warn">
     <mat-card-title><span class="material-icons">highlight_off</span> Absent Today</mat-card-title>
-    <mat-card-content class="stat-value">{{ absentToday }}</mat-card-content>
+    <mat-card-content class="stat-value">{{ dashboardData.absentToday }}</mat-card-content>
   </mat-card>
 </div>
