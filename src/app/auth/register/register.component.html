@@ -1,8 +1,8 @@
 <div class="auth-bg">
   <mat-card class="auth-card">
     <mat-card-header>
-      <mat-card-title>Welcome back</mat-card-title>
-      <mat-card-subtitle>Sign in to continue</mat-card-subtitle>
+      <mat-card-title>Create Account</mat-card-title>
+      <mat-card-subtitle>Sign up to get started</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="onSubmit()" autocomplete="off">
@@ -10,22 +10,27 @@
           <mat-label>Username</mat-label>
           <input matInput formControlName="username" required />
         </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Mobile</mat-label>
+          <input matInput formControlName="mobile" required />
+        </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
           <input matInput type="password" formControlName="password" required />
         </mat-form-field>
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Role</mat-label>
-          <mat-select formControlName="role" required>
-            <mat-option value="teacher">Teacher</mat-option>
-            <mat-option value="student">Student</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <div class="login-actions">
+        
+        <div class="register-actions">
           <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
-            Login
+            Register
           </button>
-          <span class="muted">Tip: choose a role to preview its portal</span>
+          <a mat-button routerLink="/auth/login">Already have an account?</a>
         </div>
       </form>
     </mat-card-content>

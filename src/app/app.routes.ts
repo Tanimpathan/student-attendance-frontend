@@ -5,12 +5,22 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./layout/shell.component').then((m) => m.ShellComponent),
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'login' },
+      { path: '', pathMatch: 'full', redirectTo: 'auth/login' },
 
-      // Public
+      // Auth area
       {
-        path: 'login',
-        loadComponent: () => import('./auth/login.component').then((m) => m.LoginComponent),
+        path: 'auth',
+        children: [
+          { path: '', pathMatch: 'full', redirectTo: 'login' },
+          {
+            path: 'login',
+            loadComponent: () => import('./auth/login/login.component').then((m) => m.LoginComponent),
+          },
+          {
+            path: 'register',
+            loadComponent: () => import('./auth/register/register.component').then((m) => m.RegisterComponent),
+          },
+        ],
       },
 
       // Teacher area
