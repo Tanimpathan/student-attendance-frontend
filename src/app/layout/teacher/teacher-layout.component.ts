@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -22,7 +22,13 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './teacher-layout.component.html',
   styleUrls: ['./teacher-layout.component.css'],
 })
-export class TeacherLayoutComponent {
+export class TeacherLayoutComponent implements OnInit{
+  user: any;
+
+  ngOnInit() {
+    this.user = JSON.parse(localStorage.getItem('user') || '{}');
+  }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
