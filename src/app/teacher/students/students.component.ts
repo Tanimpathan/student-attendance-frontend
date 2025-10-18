@@ -223,7 +223,29 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
   }
 
   editStudent(student: Student) {
-    this.snackBar.open('Edit student dialog placeholder', 'Close', { duration: 3000 });
+    if (!student.student_id) {
+      this.snackBar.open('Student ID not found for editing', 'Close', { duration: 3000 });
+      return;
+    }
+    const dialogRef = this.dialog.open(AddStudentDialogComponent, {
+      width: '600px',
+      data: student, // Pass existing student data to the dialog for editing
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.teacherService.updateStudent(student.student_id!, result).subscribe({
+          next: () => {
+            this.snackBar.open(`${result.username} updated successfully`, 'Close', { duration: 3000 });
+            this.loadStudents(); // Reload students after update
+          },
+          error: (err) => {
+            console.error('Error updating student', err);
+            this.snackBar.open(`Failed to update ${result.username}`, 'Close', { duration: 3000 });
+          },
+        });
+      }
+    });
   }
 
   deactivateStudent(student: Student) {

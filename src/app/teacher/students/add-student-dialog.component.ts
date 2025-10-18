@@ -34,7 +34,7 @@ export class AddStudentDialogComponent {
       mobile: new FormControl(this.data?.mobile || ''),
       first_name: new FormControl(this.data?.first_name || ''),
       last_name: new FormControl(this.data?.last_name || ''),
-      date_of_birth: new FormControl(this.data?.date_of_birth || ''),
+      date_of_birth: new FormControl(this.data?.date_of_birth || '', Validators.required),
       address: new FormControl(this.data?.address || ''),
     });
   }

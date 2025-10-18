@@ -52,4 +52,8 @@ export class TeacherService {
   deactivateStudentApi(studentId: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/teachers/students/${studentId}/deactivate`, {});
   }
+
+  updateStudent(studentId: number, studentData: Student): Observable<Student> {
+    return this.http.put<Student>(`${this.apiUrl}/teachers/students/${studentId}`, studentData);
+  }
 }
