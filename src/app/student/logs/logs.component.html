@@ -1,0 +1,18 @@
+<div class="page-header"><h2>My Login Logs</h2></div>
+<mat-card>
+  <table class="logs" *ngIf="myLogs.length; else empty">
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>IP</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let l of myLogs">
+        <td>{{ l.at }}</td>
+        <td>{{ l.ip }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <ng-template #empty><p class="muted">No logs yet.</p></ng-template>
+</mat-card>

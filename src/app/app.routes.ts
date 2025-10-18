@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./layout/shell.component').then((m) => m.ShellComponent),
+    loadComponent: () => import('./layout/shell/shell.component').then((m) => m.ShellComponent),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'auth/login' },
 
@@ -27,7 +27,7 @@ export const routes: Routes = [
       {
         path: 'teacher',
         loadComponent: () =>
-          import('./layout/teacher-layout.component').then((m) => m.TeacherLayoutComponent),
+          import('./layout/teacher/teacher-layout.component').then((m) => m.TeacherLayoutComponent),
         canMatch: [
           () => import('./core/guards/auth.guard').then((m) => m.authGuard),
           () => import('./core/guards/role.guard').then((m) => m.roleGuard('teacher')),
@@ -37,22 +37,22 @@ export const routes: Routes = [
           {
             path: 'dashboard',
             loadComponent: () =>
-              import('./teacher/dashboard.component').then((m) => m.TeacherDashboardComponent),
+              import('./teacher/dashboard/dashboard.component').then((m) => m.TeacherDashboardComponent),
           },
           {
             path: 'students',
             loadComponent: () =>
-              import('./teacher/students.component').then((m) => m.TeacherStudentsComponent),
+              import('./teacher/students/students.component').then((m) => m.TeacherStudentsComponent),
           },
           {
             path: 'attendance',
             loadComponent: () =>
-              import('./teacher/attendance.component').then((m) => m.TeacherAttendanceComponent),
+              import('./teacher/attendance/attendance.component').then((m) => m.TeacherAttendanceComponent),
           },
           {
             path: 'logs',
             loadComponent: () =>
-              import('./teacher/logs.component').then((m) => m.TeacherLogsComponent),
+              import('./teacher/logs/logs.component').then((m) => m.TeacherLogsComponent),
           },
         ],
       },
@@ -61,7 +61,7 @@ export const routes: Routes = [
       {
         path: 'student',
         loadComponent: () =>
-          import('./layout/student-layout.component').then((m) => m.StudentLayoutComponent),
+          import('./layout/student/student-layout.component').then((m) => m.StudentLayoutComponent),
         canMatch: [
           () => import('./core/guards/auth.guard').then((m) => m.authGuard),
           () => import('./core/guards/role.guard').then((m) => m.roleGuard('student')),
@@ -71,22 +71,22 @@ export const routes: Routes = [
           {
             path: 'dashboard',
             loadComponent: () =>
-              import('./student/dashboard.component').then((m) => m.StudentDashboardComponent),
+              import('./student/dashboard/dashboard.component').then((m) => m.StudentDashboardComponent),
           },
           {
             path: 'profile',
             loadComponent: () =>
-              import('./student/profile.component').then((m) => m.StudentProfileComponent),
+              import('./student/profile/profile.component').then((m) => m.StudentProfileComponent),
           },
           {
             path: 'attendance',
             loadComponent: () =>
-              import('./student/attendance.component').then((m) => m.StudentAttendanceComponent),
+              import('./student/attendance/attendance.component').then((m) => m.StudentAttendanceComponent),
           },
           {
             path: 'logs',
             loadComponent: () =>
-              import('./student/logs.component').then((m) => m.StudentLogsComponent),
+              import('./student/logs/logs.component').then((m) => m.StudentLogsComponent),
           },
         ],
       },

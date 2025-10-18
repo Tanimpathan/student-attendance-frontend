@@ -9,21 +9,33 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Username</mat-label>
           <input matInput formControlName="username" required />
+          <mat-error *ngIf="username?.invalid && (username?.dirty || username?.touched)">
+            {{ getErrorMessage('username') }}
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
           <input matInput type="email" formControlName="email" required />
+          <mat-error *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+            {{ getErrorMessage('email') }}
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Mobile</mat-label>
           <input matInput formControlName="mobile" required />
+          <mat-error *ngIf="mobile?.invalid && (mobile?.dirty || mobile?.touched)">
+            {{ getErrorMessage('mobile') }}
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
           <input matInput type="password" formControlName="password" required />
+          <mat-error *ngIf="password?.invalid && (password?.dirty || password?.touched)">
+            {{ getErrorMessage('password') }}
+          </mat-error>
         </mat-form-field>
         
         <div class="register-actions">

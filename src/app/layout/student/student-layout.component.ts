@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { StudentService } from '../../core/services/student.service';
 
 @Component({
   selector: 'app-student-layout',
@@ -22,7 +23,17 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './student-layout.component.html',
   styleUrls: ['./student-layout.component.css'],
 })
-export class StudentLayoutComponent {
+export class StudentLayoutComponent implements OnInit {
+  constructor(private studentService: StudentService) {}
+
+  ngOnInit() {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const studentId = user.student_id;
+    if (studentId) {
+      this.studentService.loadProfile(studentId);
+    }
+  }
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

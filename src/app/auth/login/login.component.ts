@@ -7,13 +7,18 @@ import {
   Validators,
   FormGroup,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { ToastrService } from 'ngx-toastr';
+import { HttpErrorResponse } from '@angular/common/http';
+
+import { AuthService } from '../../core/services/auth.service';
+import { AuthResponse } from '../../core/interfaces/auth.interface';
 
 @Component({
   selector: 'app-login',
@@ -28,6 +33,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatCardModule,
     MatIconModule,
     MatSelectModule,
+    RouterModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
@@ -35,52 +41,53 @@ import { MatSelectModule } from '@angular/material/select';
 export class LoginComponent {
   form!: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private toastr: ToastrService,
+  ) {
     this.form = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
-      role: ['', Validators.required],
     });
   }
 
   onSubmit() {
     if (this.form.invalid) return;
-    const value = this.form.value as {
-      username: string;
-      password: string;
-      role: 'teacher' | 'student';
-    };
-    if (value.role === 'student') {
-      // Active students only
-      const students = JSON.parse(localStorage.getItem('students') || '[]') as Array<{
-        username: string;
-        active: boolean;
-      }>;
-      const found = students.find((s) => s.username === value.username);
-      if (!found) {
-        alert('Student not found. Please ask teacher to add you.');
-        return;
+
+    const { username, password } = this.form.value;
+    this.authService.login({ username, password }).subscribe({
+      next: (response) => {
+        this.toastr.success('Login successful');
+        // Load student profile immediately after login
+        if (response.user.role === 'student' && response.user.student_id) {
+          const studentId = response.user.student_id;
+          // Use DI to get StudentService
+          import('../../core/services/student.service').then(({ StudentService }) => {
+            const injector = (window as any).ng?.injector;
+            const studentService = injector?.get(StudentService);
+            if (studentService) {
+              studentService.loadProfile(studentId);
+            }
+          });
+        }
+        // Redirect based on user role
+        this.router.navigate([response.user.role === 'teacher' ? '/teacher' : '/student']);
+      },
+      error: (error: HttpErrorResponse) => {
+        // Always show API error message if present
+        const apiMsg = error?.error?.message;
+        if (apiMsg) {
+          this.toastr.error(apiMsg);
+        } else if (error.status === 401) {
+          this.toastr.error('Invalid username or password');
+        } else if (error.status === 403) {
+          this.toastr.error('Your account is deactivated');
+        } else {
+          this.toastr.error('An error occurred while logging in');
+        }
       }
-      if (!found.active) {
-        alert('Your account is deactivated.');
-        return;
-      }
-    }
-    // Simulate auth, store token and user
-    const token = 'demo-token';
-    const user = { id: 'u1', username: value.username, role: value.role };
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    // Add login log
-    const logs = JSON.parse(localStorage.getItem('login_logs') || '[]');
-    logs.push({
-      username: value.username,
-      role: value.role,
-      at: new Date().toISOString(),
-      ip: '127.0.0.1',
     });
-    localStorage.setItem('login_logs', JSON.stringify(logs));
-    // Redirect based on role
-    this.router.navigate([value.role === 'teacher' ? '/teacher' : '/student']);
   }
 }
