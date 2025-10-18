@@ -14,7 +14,7 @@ function formatDateForInput(isoDateString: string | undefined): string | null {
   try {
     const date = new Date(isoDateString);
     if (isNaN(date.getTime())) {
-      return null; // Invalid date string
+      return null;
     }
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -49,8 +49,8 @@ export class AddStudentDialogComponent {
     this.studentForm = new FormGroup({
       username: new FormControl(this.data?.username || '', Validators.required),
       email: new FormControl(this.data?.email || '', [Validators.required, Validators.email]),
-      password: new FormControl('', this.data ? [] : Validators.required), // Password not required for edit
-      mobile: new FormControl(this.data?.mobile || '', Validators.pattern(/^\d{10,15}$/)), // Added mobile validation
+      password: new FormControl('', this.data ? [] : Validators.required),
+      mobile: new FormControl(this.data?.mobile || '', Validators.pattern(/^\d{10,15}$/)),
       first_name: new FormControl(this.data?.first_name || ''),
       last_name: new FormControl(this.data?.last_name || ''),
       date_of_birth: new FormControl(formatDateForInput(this.data?.date_of_birth) || '', Validators.required),
