@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http'; // Remove HttpHeaders import
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginActivityResponse, StudentLoginActivity } from '../interfaces/student.interface';
@@ -24,46 +24,25 @@ export class StudentService {
    * Mark attendance for today
    */
   markAttendance(studentId: number, is_present: boolean): Observable<any> {
-    const token = localStorage.getItem('token');
-    return this.http.post(`${environment.apiUrl}/student/mark-attendance/${studentId}`, { is_present }, {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      })
-    });
+    return this.http.post(`${environment.apiUrl}/student/mark-attendance/${studentId}`, { is_present });
   }
 
   /**
    * Get login activity logs for a student
    */
   getLoginActivity(studentId: number): Observable<LoginActivityResponse> {
-    const token = localStorage.getItem('token');
-    return this.http.get<LoginActivityResponse>(`${environment.apiUrl}/student/login-activity/${studentId}`, {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`
-      })
-    });
+    return this.http.get<LoginActivityResponse>(`${environment.apiUrl}/student/login-activity/${studentId}`);
   }
 
   /**
    * Get today's attendance status
    */
   getTodayAttendance(studentId: number): Observable<{ today_attendance: { is_present: boolean } }> {
-    const token = localStorage.getItem('token');
-    return this.http.get<{ today_attendance: { is_present: boolean } }>(`${environment.apiUrl}/student/today-attendance/${studentId}`, {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`
-      })
-    });
+    return this.http.get<{ today_attendance: { is_present: boolean } }>(`${environment.apiUrl}/student/today-attendance/${studentId}`);
   }
 
   fetchProfile(studentId: number): Observable<StudentProfile> {
-    const token = localStorage.getItem('token');
-    return this.http.get<StudentProfile>(`${environment.apiUrl}/student/profile/${studentId}`, {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`
-      })
-    });
+    return this.http.get<StudentProfile>(`${environment.apiUrl}/student/profile/${studentId}`);
   }
 
   loadProfile(studentId: number): void {
@@ -74,13 +53,7 @@ export class StudentService {
   }
 
   updateProfile(studentId: number, data: Partial<StudentProfile>): Observable<any> {
-    const token = localStorage.getItem('token');
-    return this.http.put(`${environment.apiUrl}/student/edit-profile/${studentId}`, data, {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      })
-    });
+    return this.http.put(`${environment.apiUrl}/student/edit-profile/${studentId}`, data);
   }
 
   getProfileValue(): StudentProfile | null {

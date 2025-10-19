@@ -48,7 +48,6 @@
     width: 100%;
   }
   
-  /* Form field enhancements */
   ::ng-deep .mat-form-field-outline {
     border-radius: 8px !important;
   }
@@ -69,7 +68,6 @@
     color: #4f46e5 !important;
   }
   
-  /* Dialog actions */
   .dialog-actions {
     padding: 16px 24px 24px !important;
     margin: 0 !important;
@@ -90,7 +88,6 @@
     font-weight: 500;
   }
   
-  /* Responsive design */
   @media (max-width: 768px) {
     ::ng-deep .mat-mdc-dialog-container .mat-mdc-dialog-surface {
       width: 95vw !important;
@@ -117,7 +114,6 @@
     }
   }
   
-  /* Scrollbar styling for dialog content */
   .dialog-content::-webkit-scrollbar {
     width: 6px;
   }

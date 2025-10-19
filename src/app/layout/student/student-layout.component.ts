@@ -5,7 +5,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu'; // Add this import
+import { MatMenuModule } from '@angular/material/menu';
 import { StudentService } from '../../core/services/student.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { StudentService } from '../../core/services/student.service';
     MatListModule,
     MatButtonModule,
     MatIconModule,
-    MatMenuModule, // Add this to imports array
+    MatMenuModule,
   ],
   templateUrl: './student-layout.component.html',
   styleUrls: ['./student-layout.component.css'],

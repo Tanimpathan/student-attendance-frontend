@@ -78,7 +78,6 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    // Defer initialization to ensure @ViewChild elements are ready
     setTimeout(() => {
       this.paginator.pageIndex = this.currentPage;
       this.paginator.pageSize = this.pageSize;
@@ -108,7 +107,7 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
       page: this.currentPage + 1,
       limit: this.pageSize,
       filterValue: this.filterValue,
-      filterBy: 'username', // Always filter by username for the search input
+      filterBy: 'username',
       sortBy: this.sortBy,
       sortOrder: this.sortOrder
     });
@@ -116,7 +115,7 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
       this.currentPage + 1,
       this.pageSize,
       this.filterValue,
-      'username', // Pass 'username' as filterBy
+      'username',
       this.sortBy,
       this.sortOrder || undefined
     ).subscribe({
@@ -124,7 +123,7 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
         console.log('API Response:', response);
         this.dataSource.data = response.students;
         this.totalStudents = response.pagination.totalStudents;
-        this.currentPage = response.pagination.currentPage - 1; // API is 1-based, Paginator is 0-based
+        this.currentPage = response.pagination.currentPage - 1;
         this.pageSize = response.pagination.perPage;
 
         if (this.paginator) {
@@ -144,7 +143,7 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
       page: this.currentPage,
       limit: this.pageSize,
       filterValue: this.filterValue || undefined,
-      filterBy: this.filterValue ? 'username' : undefined, // Only send filterBy if filterValue exists
+      filterBy: this.filterValue ? 'username' : undefined,
       sortBy: this.sort.active || undefined,
       sortOrder: this.sort.direction || undefined,
     };
@@ -187,12 +186,12 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) { // result will be the selected File object if not cancelled
+      if (result) { 
         const file: File = result;
         this.teacherService.uploadStudentsCsv(file).subscribe({
           next: () => {
             this.snackBar.open('Students uploaded successfully', 'Close', { duration: 3000 });
-            this.loadStudents(); // Reload students after upload
+            this.loadStudents();
           },
           error: (err) => {
             console.error('Error uploading students CSV', err);
@@ -232,7 +231,7 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
     }
     const dialogRef = this.dialog.open(AddStudentDialogComponent, {
       width: '600px',
-      data: student, // Pass existing student data to the dialog for editing
+      data: student,
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -240,7 +239,7 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
         this.teacherService.updateStudent(student.student_id!, result).subscribe({
           next: () => {
             this.snackBar.open(`${result.username} updated successfully`, 'Close', { duration: 3000 });
-            this.loadStudents(); // Reload students after update
+            this.loadStudents();
           },
           error: (err) => {
             console.error('Error updating student', err);

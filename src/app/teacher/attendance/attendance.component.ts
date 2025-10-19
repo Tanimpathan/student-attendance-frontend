@@ -69,7 +69,7 @@ export class TeacherAttendanceComponent implements OnInit, OnDestroy {
     });
 
     this.sort.sortChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.currentPage = 0; // Reset to first page on sort change
+      this.currentPage = 0;
       this.updateQueryParams();
     });
 

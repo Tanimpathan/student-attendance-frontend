@@ -46,11 +46,9 @@ export class StudentProfileComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    // Only patch form from cached profile data
     this.studentService.profile$.subscribe({
       next: (data) => {
         if (data) {
-          // Patch form with a copy, converting date_of_birth to Date for the form only
           const patch = { ...data, date_of_birth: data.date_of_birth ? new Date(data.date_of_birth) : '' };
           this.form.patchValue(patch);
         }
@@ -72,7 +70,6 @@ export class StudentProfileComponent implements OnInit {
     this.studentService.updateProfile(this.studentId, payload).subscribe({
       next: () => {
         this.toastr.success('Profile updated successfully');
-        // Optionally reload profile
         this.studentService.loadProfile(this.studentId);
       },
       error: (err) => {
@@ -83,7 +80,6 @@ export class StudentProfileComponent implements OnInit {
 
   private formatDate(date: Date): string {
     if (!date) return '';
-    // Format as YYYY-MM-DD
     const d = new Date(date);
     const month = '' + (d.getMonth() + 1).toString().padStart(2, '0');
     const day = '' + d.getDate().toString().padStart(2, '0');
