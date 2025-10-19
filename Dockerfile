@@ -1,4 +1,4 @@
-# Step 1: Build the Angular app
+# Build the Angular app
 FROM node:20-alpine AS build
 
 WORKDIR /app
@@ -20,9 +20,6 @@ FROM nginx:alpine
 
 # Copy built files from the previous stage
 COPY --from=build /app/dist/duar-code-test-frontend/browser /usr/share/nginx/html
-
-# Copy custom nginx config (optional)
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80

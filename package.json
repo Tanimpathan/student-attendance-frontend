@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "docker:build": "docker build -t duar-frontend .",
-  "docker:start": "docker run -d -p 8080:80 duar-frontend",
+    "docker:start": "docker run -d -p 8080:80 duar-frontend",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
