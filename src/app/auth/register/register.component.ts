@@ -77,12 +77,12 @@ export class RegisterComponent {
       },
       error: (error: HttpErrorResponse) => {
         this.isSubmitting = false;
-        // Always show API error message if present
+
         const apiMsg = error?.error?.message;
         if (apiMsg) {
           this.toastr.error(apiMsg);
         } else if (error.status === 400 && error.error?.errors) {
-          // Handle validation errors
+          
           Object.keys(error.error.errors).forEach(key => {
             const control = this.form.get(key);
             if (control) {
@@ -99,36 +99,34 @@ export class RegisterComponent {
     });
   }
 
-  // Getter methods for form controls
-  get username() { return this.form.get('username'); }
-  get email() { return this.form.get('email'); }
-  get mobile() { return this.form.get('mobile'); }
-  get password() { return this.form.get('password'); }
+  // get username() { return this.form.get('username'); }
+  // get email() { return this.form.get('email'); }
+  // get mobile() { return this.form.get('mobile'); }
+  // get password() { return this.form.get('password'); }
 
-  // Helper methods for error messages
-  getErrorMessage(controlName: string): string {
-    const control = this.form.get(controlName);
-    if (!control?.errors) return '';
+  // getErrorMessage(controlName: string): string {
+  //   const control = this.form.get(controlName);
+  //   if (!control?.errors) return '';
 
-    if (control.errors['required']) return `${controlName} is required`;
-    if (control.errors['email']) return 'Invalid email address';
-    if (control.errors['minlength']) {
-      return `${controlName} must be at least ${control.errors['minlength'].requiredLength} characters`;
-    }
-    if (control.errors['pattern']) {
-      switch (controlName) {
-        case 'username':
-          return 'Username can only contain letters, numbers and underscore';
-        case 'mobile':
-          return 'Mobile number must be 10 digits';
-        case 'password':
-          return 'Password must contain at least one uppercase letter, one lowercase letter and one number';
-        default:
-          return `Invalid ${controlName} format`;
-      }
-    }
-    if (control.errors['serverError']) return control.errors['serverError'];
+  //   if (control.errors['required']) return `${controlName} is required`;
+  //   if (control.errors['email']) return 'Invalid email address';
+  //   if (control.errors['minlength']) {
+  //     return `${controlName} must be at least ${control.errors['minlength'].requiredLength} characters`;
+  //   }
+  //   if (control.errors['pattern']) {
+  //     switch (controlName) {
+  //       case 'username':
+  //         return 'Username can only contain letters, numbers and underscore';
+  //       case 'mobile':
+  //         return 'Mobile number must be atleast 10 digits';
+  //       case 'password':
+  //         return 'Password must contain at least one uppercase letter, one lowercase letter and one number';
+  //       default:
+  //         return `Invalid ${controlName} format`;
+  //     }
+  //   }
+  //   if (control.errors['serverError']) return control.errors['serverError'];
 
-    return '';
-  }
+  //   return '';
+  // }
 }

@@ -2,8 +2,7 @@ export interface TeacherDashboardData {
   totalStudents: number;
   presentToday: number;
   absentToday: number;
-  recentActivities: any[]; // Define a more specific interface for activities if needed
-  // Add other relevant dashboard data fields here
+  recentActivities: any[];
 }
 
 export interface Student {
@@ -37,10 +36,10 @@ export interface AttendanceRecord {
   username: string;
   first_name: string;
   last_name: string;
-  date: string; // ISO date string
+  date: string;
   status: 'present' | 'absent' | 'late';
-  check_in_time?: string; // Optional
-  check_out_time?: string; // Optional
+  check_in_time?: string;
+  check_out_time?: string;
 }
 
 export interface AttendancePaginationResponse {

@@ -15,7 +15,6 @@ export class AuthService {
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpService) {
-    // Check if user is already logged in
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       this.currentUserSubject.next(JSON.parse(storedUser));
@@ -24,7 +23,6 @@ export class AuthService {
 
   /**
    * Login user
-   * @param request - Login credentials
    */
   login(request: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>('/auth/login', request).pipe(
@@ -38,7 +36,6 @@ export class AuthService {
 
   /**
    * Register new user
-   * @param request - Registration details
    */
   register(request: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>('/auth/register', request).pipe(

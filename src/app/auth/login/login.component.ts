@@ -16,9 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
-
 import { AuthService } from '../../core/services/auth.service';
-import { AuthResponse } from '../../core/interfaces/auth.interface';
 
 @Component({
   selector: 'app-login',
@@ -60,10 +58,10 @@ export class LoginComponent {
     this.authService.login({ username, password }).subscribe({
       next: (response) => {
         this.toastr.success('Login successful');
-        // Load student profile immediately after login
+        
         if (response.user.role === 'student' && response.user.student_id) {
           const studentId = response.user.student_id;
-          // Use DI to get StudentService
+          
           import('../../core/services/student.service').then(({ StudentService }) => {
             const injector = (window as any).ng?.injector;
             const studentService = injector?.get(StudentService);
@@ -72,11 +70,11 @@ export class LoginComponent {
             }
           });
         }
-        // Redirect based on user role
+        
         this.router.navigate([response.user.role === 'teacher' ? '/teacher' : '/student']);
       },
       error: (error: HttpErrorResponse) => {
-        // Always show API error message if present
+        
         const apiMsg = error?.error?.message;
         if (apiMsg) {
           this.toastr.error(apiMsg);
