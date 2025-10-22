@@ -40,7 +40,7 @@ export class AuthService {
   register(request: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>('/auth/register', request).pipe(
       tap(response => {
-        localStorage.setItem('token', response.token);
+        // localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
         this.currentUserSubject.next(response.user);
       })
