@@ -18,6 +18,8 @@ export interface AuthResponse {
     email: string;
     role: 'student' | 'teacher';
     student_id?: number;
+    roles: [],
+    permissions: []
   };
 }
 

@@ -59,7 +59,12 @@ export class LoginComponent {
       next: (response) => {
         this.toastr.success('Login successful');
         
-        if (response.user.role === 'student' && response.user.student_id) {
+         // Get the user's roles from the roles array
+         const userRoles = response.user.roles.map((role: any) => role.name);
+        
+        
+        // Check if user has student role and has student_id
+        if (userRoles.includes('student') && response.user.student_id) {
           const studentId = response.user.student_id;
           
           import('../../core/services/student.service').then(({ StudentService }) => {
@@ -71,7 +76,16 @@ export class LoginComponent {
           });
         }
         
-        this.router.navigate([response.user.role === 'teacher' ? '/teacher' : '/student']);
+        // Navigate based on roles
+        if (userRoles.includes('teacher')) {
+          console.log('directed');
+          
+          this.router.navigate(['/teacher']);
+        } else if (userRoles.includes('student')) {
+          this.router.navigate(['/student']);
+        } else if (userRoles.includes('admin')) {
+          this.router.navigate(['/admin']);
+        }
       },
       error: (error: HttpErrorResponse) => {
         
