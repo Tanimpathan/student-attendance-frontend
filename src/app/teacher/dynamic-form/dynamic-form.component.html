@@ -2,27 +2,48 @@
 
 <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div *ngFor="let section of (schema | keyvalue)">
-    <h3>
+    <h3 class="flex items-center justify-between">
       {{ section.key }}
-      <button type="button" (click)="removeSection(section.key)">❌ Remove</button>
+      <button type="button" (click)="removeSection(section.key)" class="text-red-500">❌ Remove</button>
     </h3>
 
-    <div [formGroupName]="section.key">
-      <div *ngFor="let field of section.value">
-        <label>{{ field.label }}</label>
-        <input [type]="field.type" [formControlName]="field.name" />
-        <button type="button" (click)="removeInput(section.key, field)">❌ Remove</button>
+    <div [formGroupName]="section.key" class="border p-3 rounded mb-3">
+      <div *ngFor="let field of section.value" class="mb-2">
+        <label class="block mb-1">{{ field.label }}</label>
+
+        <!-- Dynamic field type -->
+        <input
+          *ngIf="field.type !== 'select'"
+          [type]="field.type"
+          [formControlName]="field.name"
+          class="border p-2 rounded w-full"
+        />
+
+        <select
+          *ngIf="field.type === 'select'"
+          [formControlName]="field.name"
+          class="border p-2 rounded w-full"
+        >
+          <option value="">Select...</option>
+          <option *ngFor="let opt of field.options" [value]="opt">{{ opt }}</option>
+        </select>
+
+        <button type="button" (click)="removeInput(section.key, field)" class="text-sm text-red-500 mt-1">
+          ❌ Remove Field
+        </button>
       </div>
 
-      <button type="button" (click)="addField(section.key)">
+      <button type="button" (click)="addField(section.key)" class="text-sm bg-gray-200 px-2 py-1 rounded mt-2">
         ➕ Add Field
       </button>
     </div>
   </div>
 
-  <button type="button" (click)="addSection()">➕ Add Section</button>
+  <button type="button" (click)="addSection()" class="bg-gray-300 px-3 py-1 rounded mr-2">
+    ➕ Add Section
+  </button>
 
-  <button type="submit" class="mt-3 bg-blue-500 text-white px-3 py-1 rounded">
+  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
     Submit
   </button>
 </form>

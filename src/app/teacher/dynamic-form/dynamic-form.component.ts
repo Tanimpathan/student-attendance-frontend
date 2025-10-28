@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
@@ -9,6 +9,7 @@ interface FormField {
   label: string;
   type: string;
   required?: boolean;
+  options?: string[]; // for select fields
 }
 
 @Component({
@@ -19,7 +20,7 @@ interface FormField {
 })
 export class DynamicFormComponent implements OnInit {
   form!: FormGroup;
-  schema: Record<string, FormField[]> = {}; // e.g. { user: [...], address: [...] }
+  schema: Record<string, FormField[]> = {};
   loading = true;
 
   constructor(private fb: FormBuilder) {}
@@ -29,7 +30,6 @@ export class DynamicFormComponent implements OnInit {
   }
 
   loadSchemaFromApi() {
-    // ✅ Simulated API returning empty object
     of({})
       .pipe(delay(500))
       .subscribe((data) => {
@@ -40,8 +40,7 @@ export class DynamicFormComponent implements OnInit {
   }
 
   buildForm() {
-    // ✅ Create form dynamically from schema
-    const group: Record<string, FormGroup | FormArray> = {};
+    const group: Record<string, FormGroup> = {};
     Object.keys(this.schema).forEach((section) => {
       group[section] = this.buildGroup(this.schema[section]);
     });
@@ -58,7 +57,6 @@ export class DynamicFormComponent implements OnInit {
     return this.fb.group(group);
   }
 
-  // ➕ Add a new section (like "user" or "address")
   addSection() {
     const sectionName = prompt('Enter new section name:');
     if (!sectionName) return;
@@ -72,21 +70,34 @@ export class DynamicFormComponent implements OnInit {
     this.form.addControl(sectionName, this.fb.group({}));
   }
 
-  // ➕ Add field inside a specific section
   addField(section: string) {
     const fieldName = prompt(`Enter field name for "${section}"`);
     if (!fieldName) return;
 
+    // Choose field type
+    const type = prompt(`Enter field type (text, number, select):`, 'text') || 'text';
+
     const newField: FormField = {
       name: fieldName,
       label: fieldName,
-      type: 'text',
+      type,
       required: false,
     };
 
+    // If it's a select — ask for options
+    if (type === 'select') {
+      const opts = prompt('Enter comma-separated options (e.g. Red,Green,Blue):', '');
+      newField.options = opts ? opts.split(',').map(o => o.trim()) : [];
+    }
+
+    // ✅ Add to schema
     this.schema[section].push(newField);
+
+    // ✅ Add to form
     const sectionGroup = this.form.get(section) as FormGroup;
     sectionGroup.addControl(fieldName, this.fb.control(null));
+
+    console.log(`✅ Added ${type} field "${fieldName}" to section "${section}"`);
   }
 
   removeSection(section: string) {
@@ -94,21 +105,16 @@ export class DynamicFormComponent implements OnInit {
     this.form.removeControl(section);
   }
 
-  removeInput = (section: any, field: any) => {
-    // 1️⃣ Remove the field from the schema
+  removeInput(section: string, field: FormField) {
     this.schema[section] = this.schema[section].filter(f => f.name !== field.name);
-
-    // 2️⃣ Remove the control from the actual form group
     const sectionGroup = this.form.get(section) as FormGroup;
     if (sectionGroup?.contains(field.name)) {
       sectionGroup.removeControl(field.name);
     }
-
-    console.log(`Removed field "${field.name}" from section "${section}"`);
   }
 
   onSubmit() {
-    console.log('✅ Final form value:', this.form.value);
-    console.log('📘 Current schema:', this.schema);
+    console.log('✅ Final Form Value:', this.form.value);
+    console.log('📘 Current Schema:', this.schema);
   }
 }
