@@ -9,7 +9,7 @@ interface FormField {
   label: string;
   type: string;
   required?: boolean;
-  options?: string[]; // for select fields
+  options?: string[];
 }
 
 @Component({
@@ -84,16 +84,13 @@ export class DynamicFormComponent implements OnInit {
       required: false,
     };
 
-    // If it's a select — ask for options
     if (type === 'select') {
       const opts = prompt('Enter comma-separated options (e.g. Red,Green,Blue):', '');
       newField.options = opts ? opts.split(',').map(o => o.trim()) : [];
     }
 
-    // ✅ Add to schema
     this.schema[section].push(newField);
 
-    // ✅ Add to form
     const sectionGroup = this.form.get(section) as FormGroup;
     sectionGroup.addControl(fieldName, this.fb.control(null));
 
