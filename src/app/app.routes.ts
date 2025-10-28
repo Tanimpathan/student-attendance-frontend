@@ -54,6 +54,11 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./teacher/logs/logs.component').then((m) => m.TeacherLogsComponent),
           },
+          {
+            path: 'dynamic-form',
+            loadComponent: () =>
+              import('./teacher/dynamic-form/dynamic-form.component').then((m) => m.DynamicFormComponent),
+          },
         ],
       },
 

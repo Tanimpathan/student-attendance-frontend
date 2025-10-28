@@ -65,3 +65,11 @@ export interface TeacherLoginActivityResponse {
   period: string;
   id: string;
 }
+
+export interface FormField {
+  name: string;
+  label: string;
+  type: 'text' | 'email' | 'select';
+  required?: boolean;
+  options?: string[]; // optional property
+}
