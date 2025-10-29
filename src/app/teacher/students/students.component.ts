@@ -221,7 +221,13 @@ export class TeacherStudentsComponent implements OnInit, OnDestroy {
           },
           error: (err) => {
             console.error('Error uploading students CSV', err);
-            this.snackBar.open('Failed to upload students CSV', 'Close', { duration: 3000 });
+            this.snackBar.open(
+              err.error.error.message || 'Failed to upload students CSV',
+              'Close',
+              {
+                duration: 3000,
+              }
+            );
           },
         });
       }

@@ -10,6 +10,7 @@ import { provideToastr } from 'ngx-toastr';
 
 import { routes } from './app.routes';
 import { tokenInterceptor } from './core/interceptors/token.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withViewTransitions()),
     provideAnimations(),
-    provideHttpClient(withInterceptors([tokenInterceptor])),
+    provideHttpClient(withInterceptors([tokenInterceptor, errorInterceptor])),
     provideToastr({
       timeOut: 3000,
       positionClass: 'toast-top-right',
