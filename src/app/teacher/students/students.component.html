@@ -8,17 +8,45 @@
     <mat-label>Filter</mat-label>
     <input matInput (keyup)="applyFilter($event)" [value]="filterValue" placeholder="Search..." />
   </mat-form-field> -->
-  <button mat-stroked-button color="primary" (click)="download()">
-    Download CSV
-  </button>
+  <button mat-stroked-button color="primary" (click)="download()">Download CSV</button>
   <button class="btn-file" mat-stroked-button color="primary" (click)="onUpload()">
     Upload CSV
   </button>
-  <button matButton color="accent" (click)="downloadSampleCsv()">
-    Sample CSV Structure
-  </button>
+  <button matButton color="accent" (click)="downloadSampleCsv()">Sample CSV Structure</button>
 </div>
-<mat-card>
+
+<app-reusable-table
+  [columns]="columns"
+  [data]="students"
+  [totalItems]="totalStudents"
+  [pageSize]="pageSize"
+  [currentPage]="currentPage"
+  [sortBy]="sortBy"
+  [sortOrder]="sortOrder"
+  (pageChange)="onPageChange($event)"
+  (sortChange)="onSortChange($event)"
+>
+</app-reusable-table>
+
+<!-- Custom Cell Templates -->
+<ng-template #statusTemplate let-row>
+  <span
+    [class.active-status]="row.is_active"
+    [class.inactive-status]="!row.is_active"
+    [style.padding]="'4px 8px'"
+    [style.border-radius]="'4px'"
+    [style.font-weight]="'500'"
+  >
+    {{ row.is_active ? 'Active' : 'Inactive' }}
+  </span>
+</ng-template>
+
+<ng-template #actionsTemplate let-row>
+  <button mat-button color="primary" (click)="editStudent(row)">Edit</button>
+  <button mat-button color="warn" (click)="deactivateStudent(row)">Deactivate</button>
+</ng-template>
+
+<!-- <mat-card>
   <table mat-table [dataSource]="dataSource" matSort [matSortActive]="sortBy" [matSortDirection]="sortOrder">
     <ng-container matColumnDef="username">
       <th mat-header-cell *matHeaderCellDef mat-sort-header="username">Username</th>
@@ -60,4 +88,4 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
   <mat-paginator [length]="totalStudents" [pageSize]="pageSize" [pageIndex]="currentPage" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
-</mat-card>
+</mat-card> -->
