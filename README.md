@@ -1,14 +1,37 @@
-# DuarCodeTestFrontend
+# Duar Code Test - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
+Angular 20 application with Material Design and Docker support.
 
-## Development server
+## Quick Start
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```bash
+npm install
+npm start  # http://localhost:4200
+```
 
 ## Docker
 
-### Build and run with Docker:
 ```bash
 npm run docker:build
-npm run docker:start
+npm run docker:start  # http://localhost:8080
+```
+
+## Tech Stack
+
+- Angular 20
+- Angular Material
+- RxJS
+- ngx-toastr
+- Docker
+
+## Project Structure
+
+- `src/app/core/` - Services, guards, interceptors
+- `src/app/shared/` - Reusable components
+- `src/app/features/` - Feature modules
+
+## Testing
+
+```bash
+npm test
+```
