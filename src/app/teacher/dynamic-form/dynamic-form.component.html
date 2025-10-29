@@ -1,6 +1,13 @@
 <div *ngIf="loading">Loading form...</div>
 
-<form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()">
+<div *ngIf="!loading && Object.keys(schema).length === 0" class="text-center p-8 border-2 border-dashed rounded">
+  <p class="text-gray-500 mb-4">No sections yet. Start building your form!</p>
+  <button type="button" (click)="addSection()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+    ➕ Add First Section
+  </button>
+</div>
+
+<form *ngIf="!loading && Object.keys(schema).length > 0" [formGroup]="form" (ngSubmit)="onSubmit()">
   <div *ngFor="let section of (schema | keyvalue)">
     <h3 class="flex items-center justify-between">
       {{ section.key }}
@@ -8,29 +15,79 @@
     </h3>
 
     <div [formGroupName]="section.key" class="border p-3 rounded mb-3">
-      <div *ngFor="let field of section.value" class="mb-2">
-        <label class="block mb-1">{{ field.label }}</label>
+      <div *ngFor="let field of section.value" class="mb-4">
+        <label class="block mb-1 font-semibold">{{ field.label }}</label>
 
-        <!-- Dynamic field type -->
-        <input
-          *ngIf="field.type !== 'select'"
-          [type]="field.type"
-          [formControlName]="field.name"
-          class="border p-2 rounded w-full"
-        />
+        <!-- Non-repeatable field -->
+        <ng-container *ngIf="!field.isRepeatable">
+          <input
+            *ngIf="field.type !== 'select'"
+            [type]="field.type"
+            [formControlName]="field.name"
+            class="border p-2 rounded w-full"
+          />
 
-        <select
-          *ngIf="field.type === 'select'"
-          [formControlName]="field.name"
-          class="border p-2 rounded w-full"
-        >
-          <option value="">Select...</option>
-          <option *ngFor="let opt of field.options" [value]="opt">{{ opt }}</option>
-        </select>
+          <select
+            *ngIf="field.type === 'select'"
+            [formControlName]="field.name"
+            class="border p-2 rounded w-full"
+          >
+            <option value="">Select...</option>
+            <option *ngFor="let opt of field.options" [value]="opt">{{ opt }}</option>
+          </select>
 
-        <button type="button" (click)="removeInput(section.key, field)" class="text-sm text-red-500 mt-1">
-          ❌ Remove Field
-        </button>
+          <button type="button" (click)="removeInput(section.key, field)" class="text-sm text-red-500 mt-1">
+            ❌ Remove Field
+          </button>
+        </ng-container>
+
+        <!-- Repeatable field (FormArray) -->
+        <ng-container *ngIf="field.isRepeatable" [formArrayName]="field.name">
+          <div *ngFor="let control of getFieldArray(section.key, field.name).controls; let i = index" 
+               class="flex items-center gap-2 mb-2">
+            
+            <input
+              *ngIf="field.type !== 'select'"
+              [type]="field.type"
+              [formControlName]="i"
+              class="border p-2 rounded flex-1"
+              [placeholder]="field.label + ' #' + (i + 1)"
+            />
+
+            <select
+              *ngIf="field.type === 'select'"
+              [formControlName]="i"
+              class="border p-2 rounded flex-1"
+            >
+              <option value="">Select...</option>
+              <option *ngFor="let opt of field.options" [value]="opt">{{ opt }}</option>
+            </select>
+
+            <button 
+              type="button" 
+              (click)="removeRow(section.key, field.name, i)" 
+              class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600"
+              title="Remove row">
+              ❌
+            </button>
+          </div>
+
+          <div class="flex gap-2">
+            <button 
+              type="button" 
+              (click)="addRow(section.key, field)" 
+              class="text-sm bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
+              ➕ Add {{ field.label }}
+            </button>
+
+            <button 
+              type="button" 
+              (click)="removeInput(section.key, field)" 
+              class="text-sm text-red-500">
+              ❌ Remove Field Completely
+            </button>
+          </div>
+        </ng-container>
       </div>
 
       <button type="button" (click)="addField(section.key)" class="text-sm bg-gray-200 px-2 py-1 rounded mt-2">
@@ -43,7 +100,7 @@
     ➕ Add Section
   </button>
 
-  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
     Submit
   </button>
 </form>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
@@ -10,6 +10,7 @@ interface FormField {
   type: string;
   required?: boolean;
   options?: string[];
+  isRepeatable?: boolean;
 }
 
 @Component({
@@ -22,6 +23,7 @@ export class DynamicFormComponent implements OnInit {
   form!: FormGroup;
   schema: Record<string, FormField[]> = {};
   loading = true;
+  Object = Object;
 
   constructor(private fb: FormBuilder) {}
 
@@ -40,7 +42,7 @@ export class DynamicFormComponent implements OnInit {
   }
 
   buildForm() {
-    const group: Record<string, FormGroup> = {};
+    const group: Record<string, FormGroup | FormArray> = {};
     Object.keys(this.schema).forEach((section) => {
       group[section] = this.buildGroup(this.schema[section]);
     });
@@ -50,11 +52,37 @@ export class DynamicFormComponent implements OnInit {
   buildGroup(fields: FormField[]) {
     const group: any = {};
     fields.forEach((field) => {
-      group[field.name] = field.required
-        ? [null, Validators.required]
-        : [null];
+      if (field.isRepeatable) {
+        // Create FormArray for repeatable fields with one initial row
+        group[field.name] = this.fb.array([this.createFieldControl(field)]);
+      } else {
+        group[field.name] = this.createFieldControl(field);
+      }
     });
     return this.fb.group(group);
+  }
+
+  createFieldControl(field: FormField) {
+    return field.required ? this.fb.control(null, Validators.required) : this.fb.control(null);
+  }
+
+  getFieldArray(section: string, fieldName: string): FormArray {
+    const sectionGroup = this.form.get(section) as FormGroup;
+    return sectionGroup.get(fieldName) as FormArray;
+  }
+
+  addRow(section: string, field: FormField) {
+    const fieldArray = this.getFieldArray(section, field.name);
+    fieldArray.push(this.createFieldControl(field));
+  }
+
+  removeRow(section: string, fieldName: string, index: number) {
+    const fieldArray = this.getFieldArray(section, fieldName);
+    if (fieldArray.length > 1) {
+      fieldArray.removeAt(index);
+    } else {
+      alert('At least one row is required!');
+    }
   }
 
   addSection() {
@@ -74,14 +102,15 @@ export class DynamicFormComponent implements OnInit {
     const fieldName = prompt(`Enter field name for "${section}"`);
     if (!fieldName) return;
 
-    // Choose field type
-    const type = prompt(`Enter field type (text, number, select):`, 'text') || 'text';
+    const type = prompt(`Enter field type (text, number, email, select):`, 'text') || 'text';
+    const isRepeatable = confirm('Should this field be repeatable (add/remove rows)?');
 
     const newField: FormField = {
       name: fieldName,
       label: fieldName,
       type,
       required: false,
+      isRepeatable
     };
 
     if (type === 'select') {
@@ -92,9 +121,13 @@ export class DynamicFormComponent implements OnInit {
     this.schema[section].push(newField);
 
     const sectionGroup = this.form.get(section) as FormGroup;
-    sectionGroup.addControl(fieldName, this.fb.control(null));
+    if (isRepeatable) {
+      sectionGroup.addControl(fieldName, this.fb.array([this.createFieldControl(newField)]));
+    } else {
+      sectionGroup.addControl(fieldName, this.createFieldControl(newField));
+    }
 
-    console.log(`✅ Added ${type} field "${fieldName}" to section "${section}"`);
+    console.log(`✅ Added ${type} field "${fieldName}" to section "${section}" (Repeatable: ${isRepeatable})`);
   }
 
   removeSection(section: string) {
@@ -111,7 +144,8 @@ export class DynamicFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('✅ Final Form Value:', this.form.value);
-    console.log('📘 Current Schema:', this.schema);
+    console.log('Final Form Value:', this.form.value);
+    console.log('Current Schema:', this.schema);
+    console.log('Form Valid:', this.form.valid);
   }
 }
